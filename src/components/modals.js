@@ -37,6 +37,16 @@ const Modals = {
         this.loginEmail = document.getElementById('loginEmail');
         this.loginPassword = document.getElementById('loginPassword');
         this.loginRemember = document.getElementById('loginRemember');
+        
+        // Prefill with demo credentials
+        if (this.loginEmail && !this.loginEmail.value) {
+            this.loginEmail.value = 'demo@scratchvibe.com';
+            this.loginEmail.placeholder = 'demo@scratchvibe.com';
+        }
+        if (this.loginPassword && !this.loginPassword.value) {
+            this.loginPassword.value = 'demo123';
+            this.loginPassword.placeholder = 'demo123';
+        }
         this.loginModalClose = document.getElementById('loginModalClose');
         this.loginModalCancel = document.getElementById('loginModalCancel');
         this.loginModalSubmit = document.getElementById('loginModalSubmit');
@@ -233,6 +243,16 @@ const Modals = {
             this.loginModalSubmit.addEventListener('click', () => this.submitLogin());
         }
         
+        // Add Enter key support
+        if (this.loginForm) {
+            this.loginForm.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.submitLogin();
+                }
+            });
+        }
+        
         // Form submit
         if (this.loginForm) {
             this.loginForm.addEventListener('submit', (e) => {
@@ -244,6 +264,14 @@ const Modals = {
     
     openLogin() {
         this.openModal('loginModal');
+        
+        // Auto-focus on email field
+        setTimeout(() => {
+            if (this.loginEmail) {
+                this.loginEmail.focus();
+                this.loginEmail.select();
+            }
+        }, 100);
     }
     
     closeLogin() {
@@ -288,10 +316,10 @@ const Modals = {
                 // Load projects
                 await App.loadInitialProject();
             } else {
-                Notifications.show('Anmeldung fehlgeschlagen', 'error');
+                Notifications.show('Anmeldung fehlgeschlagen - Benutzer nicht gefunden', 'error');
             }
         } catch (error) {
-            Notifications.show(error.message, 'error');
+            Notifications.show(error.message || 'Anmeldung fehlgeschlagen', 'error');
         } finally {
             // Reset button
             this.loginModalSubmit.disabled = false;

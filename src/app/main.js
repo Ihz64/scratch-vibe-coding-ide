@@ -73,6 +73,14 @@ class ScratchVibeIDE {
         // Load settings
         await this.loadSettings();
         
+        // Initialize Auth FIRST (before anything else)
+        Auth.init();
+        
+        // Initialize Modals EARLY (so login modal is ready)
+        if (typeof Modals !== 'undefined') {
+            Modals.init();
+        }
+        
         // Initialize components
         this.initComponents();
         
@@ -85,7 +93,7 @@ class ScratchVibeIDE {
         // Initialize event handlers
         this.initEvents();
         
-        // Check authentication
+        // Check authentication (this may open login modal)
         await this.checkAuth();
         
         // Load or create project
@@ -366,7 +374,13 @@ class ScratchVibeIDE {
         document.getElementById('btnExport').addEventListener('click', () => Modals.openExport());
         document.getElementById('btnImport').addEventListener('click', () => Modals.openImport());
         document.getElementById('btnSettings').addEventListener('click', () => Modals.openSettings());
-        document.getElementById('btnLogin').addEventListener('click', () => this.showLogin());
+        document.getElementById('btnLogin').addEventListener('click', () => {
+            if (AppState.isAuthenticated) {
+                this.showLogin();
+            } else {
+                Modals.openLogin();
+            }
+        });
         
         // Sidebar toggle
         document.querySelector('.sidebar-toggle').addEventListener('click', () => this.toggleSidebar());
@@ -397,12 +411,26 @@ class ScratchVibeIDE {
             AppState.isAuthenticated = true;
             this.updateUserUI();
         } else {
-            // Show login modal
+            // Try auto-login with demo credentials
+            try {
+                const demoUser = await Auth.login('demo@scratchvibe.com', 'demo123');
+                if (demoUser) {
+                    AppState.user = demoUser;
+                    AppState.isAuthenticated = true;
+                    this.updateUserUI();
+                    console.log('Auto-login successful with demo user');
+                    return;
+                }
+            } catch (e) {
+                console.log('Auto-login failed, showing login modal:', e.message);
+            }
+            
+            // Show login modal after a short delay
             setTimeout(() => {
                 if (!AppState.isAuthenticated) {
                     Modals.openLogin();
                 }
-            }, 1000);
+            }, 500);
         }
     }
     

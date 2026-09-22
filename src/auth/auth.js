@@ -100,6 +100,17 @@ const Auth = {
                         lastLogin: null,
                         settings: {},
                         projects: []
+                    },
+                    {
+                        id: 'user',
+                        name: 'User',
+                        email: 'user@scratchvibe.com',
+                        password: 'user',
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                        lastLogin: null,
+                        settings: {},
+                        projects: []
                     }
                 ];
                 localStorage.setItem('vibeUsers', JSON.stringify(AuthState.users));
@@ -137,9 +148,26 @@ const Auth = {
                     // Update last login
                     user.lastLogin = new Date().toISOString();
                     this.saveUsers();
+                    return;
                 } else {
                     this.clearSession();
                 }
+            }
+            
+            // AUTO-LOGIN: If no session, try demo user credentials
+            try {
+                const demoUser = this.getUserByEmail('demo@scratchvibe.com');
+                if (demoUser) {
+                    this.createSession(demoUser.id);
+                    AuthState.currentUser = demoUser;
+                    AuthState.isAuthenticated = true;
+                    AuthState.token = 'demo-token';
+                    demoUser.lastLogin = new Date().toISOString();
+                    this.saveUsers();
+                    console.log('Auto-login with demo user');
+                }
+            } catch (e) {
+                console.log('No demo user found');
             }
         } catch (error) {
             console.error('Error checking session:', error);
