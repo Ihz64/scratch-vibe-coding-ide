@@ -1,0 +1,347 @@
+/* ============================================
+   CSS Reset - Modern Reset for IDE Applications
+   ============================================ */
+
+/* Box Sizing Rules */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/* Remove Default Margin */
+body,
+h1, h2, h3, h4, h5, h6,
+p, figure, blockquote, dl, dd {
+    margin: 0;
+}
+
+/* Remove List Styles */
+ul[role='list'],
+ol[role='list'] {
+    list-style: none;
+}
+
+/* Set Core Body Defaults */
+body {
+    min-height: 100vh;
+    text-rendering: optimizeSpeed;
+    line-height: 1.5;
+}
+
+/* Set Shorter Line Heights on Headings and Interactive Elements */
+h1, h2, h3, h4, h5, h6,
+button, input, label, select, textarea,
+[role="button"] {
+    line-height: 1.15;
+}
+
+/* Make Images Easier to Work With */
+img,
+picture {
+    max-width: 100%;
+    display: block;
+}
+
+/* Inherit Fonts for Inputs and Buttons */
+input,
+button,
+textarea,
+select {
+    font: inherit;
+    color: inherit;
+}
+
+/* Remove All Animations, Transitions and Smooth Scroll for People That Prefer Not to See Them */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Remove Input Spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Remove Input Clear Button */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+
+/* Remove Textarea Resize Handle */
+textarea {
+    resize: vertical;
+}
+
+/* Remove Default Focus Outline */
+:focus:not(:focus-visible) {
+    outline: none;
+}
+
+/* Remove Default Button Styles */
+button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+/* Remove Default Link Styles */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Remove Default Table Styles */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* Remove Default Quote Styles */
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+/* Remove Default HR Styles */
+hr {
+    margin: 0;
+    border: 0;
+    border-top: 1px solid;
+}
+
+/* Make Sup and Sub More Readable */
+sup,
+sub {
+    font-size: 0.75em;
+    line-height: 0;
+    position: relative;
+}
+
+sup {
+    top: -0.5em;
+}
+
+sub {
+    bottom: -0.25em;
+}
+
+/* Improve Default Fieldset Styles */
+fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+legend {
+    padding: 0;
+}
+
+/* Improve Default Form Styles */
+form {
+    margin: 0;
+}
+
+/* Improve Default Details/Summary Styles */
+details {
+    display: block;
+}
+
+summary {
+    display: list-item;
+}
+
+/* Improve Default Dialog Styles */
+dialog {
+    border: 0;
+    padding: 0;
+    background: transparent;
+}
+
+/* Improve Default Meter Styles */
+meter {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+meter::-webkit-meter-bar {
+    background: transparent;
+}
+
+/* Improve Default Progress Styles */
+progress {
+    vertical-align: baseline;
+}
+
+/* Remove Default File Input Button */
+input[type="file"]::file-selector-button {
+    display: none;
+}
+
+/* Remove Default Color Input Styles */
+input[type="color"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border: none;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+}
+
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 0;
+}
+
+/* Improve Default Range Input Styles */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    background: #30363d;
+    border-radius: 2px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #58a6ff;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-top: -6px;
+}
+
+input[type="range"]::-moz-range-track {
+    width: 100%;
+    height: 4px;
+    background: #30363d;
+    border-radius: 2px;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #58a6ff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+/* Improve Default Checkbox/Radio Styles */
+input[type="checkbox"],
+input[type="radio"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 2px;
+    cursor: pointer;
+    position: relative;
+    vertical-align: middle;
+}
+
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    background: #58a6ff;
+    border-color: #58a6ff;
+}
+
+input[type="checkbox"]:checked::after,
+input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    height: 8px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+    top: 2px;
+    left: 6px;
+}
+
+input[type="radio"] {
+    border-radius: 50%;
+}
+
+input[type="radio"]:checked::after {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: none;
+    background: #ffffff;
+    top: 4px;
+    left: 4px;
+}
+
+/* Improve Default Select Styles */
+select {
+    -webkit-appearance: none;
+    appearance: none;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: #e6edf3;
+    cursor: pointer;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+select:focus {
+    outline: none;
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.3);
+}
+
+/* Improve Default Option Styles */
+option {
+    background: #0d1117;
+    color: #e6edf3;
+}
+
+/* Improve Default Tooltip Styles */
+[role="tooltip"] {
+    position: absolute;
+    background: #21262d;
+    color: #e6edf3;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    z-index: 1000;
+    white-space: nowrap;
+}

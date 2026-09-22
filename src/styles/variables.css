@@ -1,0 +1,275 @@
+/* ============================================
+   Scratch Vibe Coding IDE - CSS Variables
+   Modern Dark Theme for Professional IDE
+   ============================================ */
+
+:root {
+    /* === Color Palette === */
+    
+    /* Background Colors */
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --bg-hover: #2e343c;
+    --bg-active: #3e444c;
+    --bg-input: #0d1117;
+    --bg-code: #0d1117;
+    --bg-sidebar: #1e1e1e;
+    --bg-panel: #252526;
+    --bg-statusbar: #1e1e1e;
+    
+    /* Text Colors */
+    --text-primary: #e6edf3;
+    --text-secondary: #8b949e;
+    --text-muted: #6e7681;
+    --text-error: #f85149;
+    --text-warning: #ffa657;
+    --text-success: #3fb950;
+    --text-info: #58a6ff;
+    
+    /* Accent Colors */
+    --accent-primary: #58a6ff;
+    --accent-secondary: #89d185;
+    --accent-purple: #a371f7;
+    --accent-orange: #f0883e;
+    --accent-red: #f85149;
+    --accent-yellow: #ffa657;
+    --accent-green: #3fb950;
+    
+    /* Border Colors */
+    --border-primary: #30363d;
+    --border-secondary: #21262d;
+    --border-muted: #1f2328;
+    --border-glow: rgba(88, 166, 255, 0.3);
+    
+    /* Syntax Highlighting */
+    --syntax-keyword: #ff7b72;
+    --syntax-string: #a5d6ff;
+    --syntax-number: #79c0ff;
+    --syntax-comment: #6a737d;
+    --syntax-function: #d2a8ff;
+    --syntax-variable: #ffa657;
+    --syntax-type: #79c0ff;
+    --syntax-operator: #ff7b72;
+    --syntax-bracket: #8b949e;
+    --syntax-event: #7ee787;
+    --syntax-sprite: #a371f7;
+    --syntax-action: #ffa657;
+    --syntax-value: #79c0ff;
+    --syntax-error: #f85149;
+    
+    /* UI Elements */
+    --ui-height: 32px;
+    --ui-padding: 8px 12px;
+    --ui-border-radius: 6px;
+    --ui-border-width: 1px;
+    --ui-font-size: 13px;
+    --ui-font-family: 'Segoe UI', 'Fira Code', 'Consolas', 'Monaco', monospace;
+    
+    /* Editor Specific */
+    --editor-font-size: 14px;
+    --editor-line-height: 1.5;
+    --editor-tab-size: 4;
+    --editor-indent: 20px;
+    --editor-gutter-width: 50px;
+    --editor-minimap-width: 120px;
+    
+    /* Sidebar */
+    --sidebar-width: 280px;
+    --sidebar-collapsed-width: 50px;
+    --sidebar-item-height: 28px;
+    
+    /* Preview Panel */
+    --preview-bg: #1e1e1e;
+    --preview-border: #30363d;
+    
+    /* Status Bar */
+    --statusbar-height: 24px;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.4);
+    --shadow-glow: 0 0 20px rgba(88, 166, 255, 0.2);
+    
+    /* Transitions */
+    --transition-fast: 0.1s ease;
+    --transition-normal: 0.2s ease;
+    --transition-slow: 0.3s ease;
+    
+    /* Z-Index Layers */
+    --z-base: 1;
+    --z-dropdown: 100;
+    --z-modal: 200;
+    --z-tooltip: 300;
+    --z-notification: 400;
+    --z-loading: 500;
+    
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 12px;
+    --spacing-lg: 16px;
+    --spacing-xl: 24px;
+    --spacing-xxl: 32px;
+}
+
+/* ============================================
+   Theme Variations
+   ============================================ */
+
+/* Light Theme */
+[data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f6f8fa;
+    --bg-tertiary: #f0f2f5;
+    --bg-hover: #eaeef2;
+    --bg-active: #d8dee4;
+    --bg-input: #ffffff;
+    --bg-code: #f6f8fa;
+    --bg-sidebar: #f6f8fa;
+    --bg-panel: #ffffff;
+    --bg-statusbar: #f6f8fa;
+    
+    --text-primary: #24292e;
+    --text-secondary: #586069;
+    --text-muted: #89929b;
+    --text-error: #cb2431;
+    --text-warning: #b08800;
+    --text-success: #22863a;
+    --text-info: #0366d6;
+    
+    --border-primary: #d1d9e0;
+    --border-secondary: #e1e4e8;
+    --border-muted: #f1f3f5;
+    --border-glow: rgba(3, 102, 214, 0.3);
+    
+    --syntax-keyword: #d73a49;
+    --syntax-string: #032f62;
+    --syntax-number: #005cc5;
+    --syntax-comment: #6a737d;
+    --syntax-function: #6f42c1;
+    --syntax-variable: #005cc5;
+}
+
+/* High Contrast Theme */
+[data-theme="high-contrast"] {
+    --bg-primary: #000000;
+    --bg-secondary: #1a1a1a;
+    --bg-tertiary: #2a2a2a;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-muted: #888888;
+    --border-primary: #ffffff;
+    --border-secondary: #888888;
+}
+
+/* ============================================
+   CSS Custom Properties for Specific Components
+   ============================================ */
+
+/* Button States */
+--btn-primary-bg: var(--accent-primary);
+--btn-primary-hover: #6a99ff;
+--btn-primary-active: #4a80ff;
+--btn-primary-text: #ffffff;
+
+--btn-secondary-bg: var(--bg-tertiary);
+--btn-secondary-hover: var(--bg-hover);
+--btn-secondary-active: var(--bg-active);
+--btn-secondary-text: var(--text-primary);
+
+--btn-danger-bg: var(--accent-red);
+--btn-danger-hover: #e8453c;
+--btn-danger-active: #c9372b;
+--btn-danger-text: #ffffff;
+
+--btn-success-bg: var(--accent-green);
+--btn-success-hover: #45a35d;
+--btn-success-active: #358245;
+--btn-success-text: #ffffff;
+
+/* Input Fields */
+--input-bg: var(--bg-input);
+--input-border: var(--border-secondary);
+--input-text: var(--text-primary);
+--input-placeholder: var(--text-muted);
+--input-focus-border: var(--accent-primary);
+--input-focus-glow: var(--border-glow);
+
+/* Scrollbar */
+--scrollbar-thumb: var(--border-secondary);
+--scrollbar-track: var(--bg-secondary);
+--scrollbar-thumb-hover: var(--border-primary);
+
+/* Code Editor */
+--editor-selection: rgba(88, 166, 255, 0.3);
+--editor-current-line: rgba(255, 255, 255, 0.1);
+--editor-bracket-match: rgba(88, 166, 255, 0.3);
+--editor-indent-guide: rgba(255, 255, 255, 0.1);
+--editor-active-line: rgba(255, 255, 255, 0.15);
+
+/* Sidebar */
+--sidebar-text: var(--text-secondary);
+--sidebar-text-hover: var(--text-primary);
+--sidebar-text-active: var(--text-primary);
+--sidebar-icon: var(--text-muted);
+--sidebar-icon-hover: var(--text-primary);
+--sidebar-icon-active: var(--accent-primary);
+--sidebar-badge: var(--bg-tertiary);
+--sidebar-badge-text: var(--text-muted);
+
+/* Tree View */
+--tree-indent: 16px;
+--tree-item-height: 24px;
+--tree-expand-icon: var(--text-muted);
+--tree-file-icon: var(--text-muted);
+--tree-folder-icon: var(--accent-orange);
+--tree-selected-bg: var(--bg-hover);
+--tree-selected-text: var(--text-primary);
+
+/* Tabs */
+--tab-bg: var(--bg-secondary);
+--tab-text: var(--text-secondary);
+--tab-hover-bg: var(--bg-hover);
+--tab-hover-text: var(--text-primary);
+--tab-active-bg: var(--bg-primary);
+--tab-active-text: var(--text-primary);
+--tab-active-border: var(--accent-primary);
+--tab-close-hover: var(--text-error);
+
+/* Status Bar */
+--statusbar-text: var(--text-muted);
+--statusbar-item-hover: var(--text-primary);
+--statusbar-separator: var(--border-muted);
+
+/* Notifications */
+--notification-info-bg: var(--accent-primary);
+--notification-info-text: #ffffff;
+--notification-success-bg: var(--accent-green);
+--notification-success-text: #ffffff;
+--notification-warning-bg: var(--accent-orange);
+--notification-warning-text: #ffffff;
+--notification-error-bg: var(--accent-red);
+--notification-error-text: #ffffff;
+
+/* Debug Console */
+--debug-bg: var(--bg-secondary);
+--debug-text: var(--text-primary);
+--debug-error: var(--text-error);
+--debug-warning: var(--text-warning);
+--debug-info: var(--text-info);
+--debug-success: var(--text-success);
+
+/* Preview Panel */
+--preview-bg: #1e1e1e;
+--preview-border: var(--border-primary);
+--preview-controls-bg: var(--bg-tertiary);
+--preview-controls-text: var(--text-secondary);
+
+/* Command Palette */
+--palette-bg: var(--bg-panel);
+--palette-border: var(--border-primary);
+--palette-text: var(--text-primary);
+--palette-highlight: var(--accent-primary);
+--palette-selected: var(--bg-hover);

@@ -1,0 +1,346 @@
+/**
+ * Custom CodeMirror Theme for Scratch Vibe Coding IDE
+ * Dark theme with Scratch-inspired colors
+ */
+
+/* Base theme */
+.cm-s-vibe-dark {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-code);
+    line-height: 1.5;
+    height: 100%;
+}
+
+/* Text colors */
+.cm-s-vibe-dark .cm-comment {
+    color: var(--text-muted);
+}
+
+.cm-s-vibe-dark .cm-keyword {
+    color: var(--scratch-orange);
+    font-weight: 600;
+}
+
+.cm-s-vibe-dark .cm-operator {
+    color: var(--scratch-blue);
+}
+
+.cm-s-vibe-dark .cm-variable {
+    color: var(--scratch-light-blue);
+}
+
+.cm-s-vibe-dark .cm-variable-2 {
+    color: var(--scratch-purple);
+}
+
+.cm-s-vibe-dark .cm-variable-3 {
+    color: var(--scratch-green);
+}
+
+.cm-s-vibe-dark .cm-string {
+    color: var(--scratch-green);
+}
+
+.cm-s-vibe-dark .cm-string-2 {
+    color: var(--scratch-light-green);
+}
+
+.cm-s-vibe-dark .cm-number {
+    color: var(--scratch-pink);
+}
+
+.cm-s-vibe-dark .cm-atom {
+    color: var(--scratch-yellow);
+}
+
+.cm-s-vibe-dark .cm-meta {
+    color: var(--text-secondary);
+}
+
+.cm-s-vibe-dark .cm-tag {
+    color: var(--scratch-red);
+}
+
+.cm-s-vibe-dark .cm-attribute {
+    color: var(--scratch-light-blue);
+}
+
+.cm-s-vibe-dark .cm-property {
+    color: var(--scratch-blue);
+}
+
+.cm-s-vibe-dark .cm-builtin {
+    color: var(--scratch-orange);
+}
+
+.cm-s-vibe-dark .cm-boolean {
+    color: var(--scratch-pink);
+}
+
+.cm-s-vibe-dark .cm-function {
+    color: var(--scratch-yellow);
+}
+
+/* Line numbers */
+.cm-s-vibe-dark .CodeMirror-gutter {
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    border-right: 1px solid var(--border-color);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-sm);
+    width: 1%;
+    min-width: 40px;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.cm-s-vibe-dark .CodeMirror-gutter-text {
+    color: var(--text-muted);
+}
+
+.cm-s-vibe-dark .CodeMirror-guttermarker {
+    color: var(--text-muted);
+}
+
+.cm-s-vibe-dark .CodeMirror-guttermarker-subtle {
+    color: var(--text-muted);
+    opacity: 0.5;
+}
+
+/* Active line */
+.cm-s-vibe-dark .CodeMirror-activeline-background {
+    background: var(--bg-tertiary);
+}
+
+.cm-s-vibe-dark .CodeMirror-activeline-gutter {
+    background: var(--bg-tertiary);
+}
+
+/* Selection */
+.cm-s-vibe-dark .CodeMirror-selected {
+    background: var(--selection-bg);
+    color: var(--selection-text);
+}
+
+.cm-s-vibe-dark .CodeMirror-focused .CodeMirror-selected {
+    background: var(--selection-bg);
+}
+
+.cm-s-vibe-dark .CodeMirror-crosshair {
+    cursor: crosshair;
+}
+
+/* Cursor */
+.cm-s-vibe-dark .CodeMirror-cursor {
+    border-left: 2px solid var(--cursor-color);
+}
+
+.cm-s-vibe-dark .CodeMirror-focused .CodeMirror-cursor {
+    border-left: 2px solid var(--cursor-color);
+}
+
+/* Matching brackets */
+.cm-s-vibe-dark .CodeMirror-matchingbracket {
+    outline: 1px solid var(--scratch-orange);
+    color: var(--scratch-orange);
+}
+
+.cm-s-vibe-dark .CodeMirror-nonmatchingbracket {
+    outline: 1px solid var(--scratch-red);
+    color: var(--scratch-red);
+}
+
+/* Error markers */
+.cm-s-vibe-dark .cm-error {
+    color: var(--scratch-red);
+    background: rgba(255, 0, 0, 0.1);
+    border-bottom: 1px solid var(--scratch-red);
+}
+
+.cm-s-vibe-dark .cm-warning {
+    color: var(--scratch-yellow);
+    background: rgba(255, 255, 0, 0.1);
+    border-bottom: 1px solid var(--scratch-yellow);
+}
+
+/* Fold gutter */
+.cm-s-vibe-dark .CodeMirror-foldgutter {
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    border-left: 1px solid var(--border-color);
+}
+
+.cm-s-vibe-dark .CodeMirror-foldgutter-open,
+.cm-s-vibe-dark .CodeMirror-foldgutter-folded {
+    color: var(--text-muted);
+}
+
+.cm-s-vibe-dark .CodeMirror-foldmarker {
+    color: var(--text-muted);
+    text-shadow: none;
+}
+
+/* Line wrapping */
+.cm-s-vibe-dark .CodeMirror-wrap pre {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+}
+
+/* Read-only */
+.cm-s-vibe-dark .CodeMirror-readonly {
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+}
+
+/* Special characters */
+.cm-s-vibe-dark .cm-special {
+    color: var(--scratch-purple);
+}
+
+/* Types */
+.cm-s-vibe-dark .cm-type {
+    color: var(--scratch-light-blue);
+}
+
+.cm-s-vibe-dark .cm-qualifier {
+    color: var(--scratch-yellow);
+}
+
+/* Definitions */
+.cm-s-vibe-dark .cm-def {
+    color: var(--scratch-orange);
+}
+
+.cm-s-vibe-dark .cm-operator {
+    color: var(--scratch-blue);
+}
+
+/* Property names */
+.cm-s-vibe-dark .cm-property {
+    color: var(--scratch-light-blue);
+}
+
+/* Regex */
+.cm-s-vibe-dark .cm-regexp {
+    color: var(--scratch-green);
+}
+
+/* Link */
+.cm-s-vibe-dark .cm-link {
+    color: var(--scratch-light-blue);
+}
+
+/* Meta */
+.cm-s-vibe-dark .cm-meta {
+    color: var(--text-secondary);
+}
+
+/* Override for Scratch-specific syntax */
+.cm-s-vibe-dark .cm-scratch-sprite {
+    color: var(--scratch-orange);
+}
+
+.cm-s-vibe-dark .cm-scratch-event {
+    color: var(--scratch-yellow);
+}
+
+.cm-s-vibe-dark .cm-scratch-block {
+    color: var(--scratch-blue);
+}
+
+.cm-s-vibe-dark .cm-scratch-variable {
+    color: var(--scratch-light-blue);
+}
+
+.cm-s-vibe-dark .cm-scratch-broadcast {
+    color: var(--scratch-purple);
+}
+
+/* Light theme variant */
+.cm-s-vibe-light {
+    background: var(--bg-primary-light);
+    color: var(--text-primary-light);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-code);
+    line-height: 1.5;
+    height: 100%;
+}
+
+.cm-s-vibe-light .cm-comment {
+    color: var(--text-muted-light);
+}
+
+.cm-s-vibe-light .cm-keyword {
+    color: var(--scratch-orange);
+    font-weight: 600;
+}
+
+.cm-s-vibe-light .cm-operator {
+    color: var(--scratch-blue);
+}
+
+.cm-s-vibe-light .cm-variable {
+    color: var(--scratch-light-blue);
+}
+
+.cm-s-vibe-light .cm-string {
+    color: var(--scratch-green);
+}
+
+.cm-s-vibe-light .cm-number {
+    color: var(--scratch-pink);
+}
+
+.cm-s-vibe-light .CodeMirror-gutter {
+    background: var(--bg-secondary-light);
+    color: var(--text-muted-light);
+    border-right: 1px solid var(--border-color-light);
+}
+
+.cm-s-vibe-light .CodeMirror-selected {
+    background: var(--selection-bg-light);
+}
+
+.cm-s-vibe-light .CodeMirror-cursor {
+    border-left: 2px solid var(--cursor-color-light);
+}
+
+/* High contrast theme */
+.cm-s-vibe-high-contrast {
+    background: var(--bg-primary-hc);
+    color: var(--text-primary-hc);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-code);
+    line-height: 1.5;
+    height: 100%;
+}
+
+.cm-s-vibe-high-contrast .cm-keyword {
+    color: var(--scratch-orange);
+    font-weight: 700;
+    text-shadow: 0 0 2px var(--scratch-orange);
+}
+
+.cm-s-vibe-high-contrast .cm-string {
+    color: var(--scratch-green);
+    text-shadow: 0 0 2px var(--scratch-green);
+}
+
+.cm-s-vibe-high-contrast .cm-number {
+    color: var(--scratch-pink);
+    text-shadow: 0 0 2px var(--scratch-pink);
+}
+
+.cm-s-vibe-high-contrast .CodeMirror-cursor {
+    border-left: 3px solid var(--cursor-color-hc);
+}
+
+.cm-s-vibe-high-contrast .CodeMirror-selected {
+    background: var(--selection-bg-hc);
+    color: var(--selection-text-hc);
+}

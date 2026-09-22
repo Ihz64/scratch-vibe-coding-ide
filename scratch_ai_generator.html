@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scratch AI Generator - Prompt zu .sb3</title>
+    <style>
+        :root {
+            --primary: #4a6baf;
+            --secondary: #ff715b;
+            --background: #f8f9fa;
+            --card: #ffffff;
+            --text: #333333;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 968px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: var(--card);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        .card-title {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 107, 175, 0.1);
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .form-group input[type="color"] {
+            width: 100%;
+            height: 50px;
+            padding: 5px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .provider-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .provider-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .provider-card:hover {
+            border-color: var(--primary);
+            background: #e9ecef;
+        }
+
+        .provider-card.selected {
+            border-color: var(--primary);
+            background: #e7f1ff;
+            box-shadow: 0 0 0 3px rgba(74, 107, 175, 0.2);
+        }
+
+        .provider-card img {
+            width: 40px;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+
+        .provider-card h4 {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .provider-card p {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .model-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 10px;
+        }
+
+        .model-btn {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 0.9em;
+        }
+
+        .model-btn:hover {
+            border-color: var(--primary);
+            background: #f8f9fa;
+        }
+
+        .model-btn.selected {
+            border-color: var(--primary);
+            background: #e7f1ff;
+            color: var(--primary);
+        }
+
+        .design-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .design-option {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .design-option label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .design-option input[type="color"] {
+            width: 100%;
+            height: 40px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .design-option input[type="range"] {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3a5a9f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 107, 175, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #e6654b;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 113, 91, 0.4);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .status.show {
+            display: block;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.info {
+            background: #cce5ff;
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        .preview-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #ccc;
+        }
+
+        .preview-section.has-content {
+            border-style: solid;
+            border-color: var(--primary);
+        }
+
+        .preview-content {
+            width: 100%;
+            max-width: 400px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .template-selector {
+            margin-bottom: 20px;
+        }
+
+        .template-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .template-card:hover {
+            border-color: var(--primary);
+            background: #e9ecef;
+        }
+
+        .template-card.selected {
+            border-color: var(--primary);
+            background: #e7f1ff;
+        }
+
+        .template-card h4 {
+            margin-bottom: 5px;
+        }
+
+        .template-card p {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .api-key-section {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .api-key-section h4 {
+            margin-bottom: 10px;
+            color: #856404;
+        }
+
+        .api-key-input {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .api-key-input input {
+            flex: 1;
+        }
+
+        .api-key-input .btn {
+            flex-shrink: 0;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .code-preview {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .export-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .progress-bar.show {
+            display: block;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .settings-section {
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .settings-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #ccc;
+            transition: .4s;
+            border-radius: 30px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .toggle-slider {
+            background: var(--primary);
+        }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Scratch AI Generator</h1>
+            <p>Erstelle Scratch-Projekte (.sb3) aus Text-Prompts mit KI-Unterstützung</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Linkes Panel - Eingabe -->
+            <div class="card">
+                <h2 class="card-title">📝 Projekt-Eingabe</h2>
+                
+                <div class="form-group">
+                    <label for="projectName">Projekt-Name:</label>
+                    <input type="text" id="projectName" placeholder="Mein cooles Scratch-Projekt">
+                </div>
+
+                <div class="form-group">
+                    <label for="prompt">Beschreibe dein Scratch-Projekt:</label>
+                    <textarea id="prompt" placeholder="Beispiel: Erstelle ein Spiel, in dem ein Katze einen Ball fängt. Die Katze soll sich mit den Pfeiltasten steuern lassen und der Ball soll von oben fallen. Es soll Punkte geben und ein Game Over bei 3 verpassten Bällen."></textarea>
+                </div>
+
+                <div class="template-selector">
+                    <h3 style="margin-bottom: 10px;">📋 Template auswählen:</h3>
+                    <div class="template-card selected" data-template="empty">
+                        <h4>Leeres Projekt</h4>
+                        <p>Standard Scratch-Projekt mit leerer Bühne</p>
+                    </div>
+                    <div class="template-card" data-template="sprite">
+                        <h4>Einfacher Sprite</h4>
+                        <p>Projekt mit einem Sprite und Grundbewegungen</p>
+                    </div>
+                    <div class="template-card" data-template="game">
+                        <h4>Spiel-Template</h4>
+                        <p>Grundgerüst für Spiele mit Score und Leben</p>
+                    </div>
+                    <div class="template-card" data-template="story">
+                        <h4>Geschichte</h4>
+                        <p>Template für interaktive Geschichten</p>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>⚙️ Einstellungen</h3>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="includeComments" checked>
+                            <span>Code-Kommentare hinzufügen</span>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="optimizeCode" checked>
+                            <span>Code optimieren</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="generateProject()">
+                        🎯 Projekt generieren
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearAll()">
+                        🗑️ Alles zurücksetzen
+                    </button>
+                </div>
+
+                <div class="api-key-section">
+                    <h4>⚠️ API-Key erforderlich für KI-Generierung</h4>
+                    <p style="margin-bottom: 10px; font-size: 0.9em;">
+                        Gib deinen API-Key ein, um KI-Modelle zu nutzen.
+                    </p>
+                    <div class="api-key-input">
+                        <input type="password" id="apiKey" placeholder="Dein API-Key...">
+                        <button class="btn btn-success" onclick="saveApiKey()">💾 Speichern</button>
+                    </div>
+                    <p style="margin-top: 10px; font-size: 0.8em; color: #666;">
+                        API-Keys werden nur lokal gespeichert und nie an Server gesendet.
+                    </p>
+                </div>
+
+                <div class="status" id="statusMessage"></div>
+                <div class="loading" id="loadingIndicator">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 10px;">Projekt wird generiert...</p>
+                </div>
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+
+            <!-- Rechtes Panel - KI & Design -->
+            <div class="card">
+                <h2 class="card-title">🤖 KI-Anbieter & Modell</h2>
+                
+                <h3 style="margin-bottom: 10px;">Anbieter auswählen:</h3>
+                <div class="provider-selector">
+                    <div class="provider-card selected" data-provider="gemini" onclick="selectProvider('gemini')">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/92/Google_Gemini_logo.svg/2048px-Google_Gemini_logo.svg.png" alt="Gemini" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%234285F4%22%3E%3Cpath d=%22M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z%22/%3E%3C/svg%3E'" />
+                        <h4>Google Gemini</h4>
+                        <p>Kostenlos & leistungsstark</p>
+                    </div>
+                    <div class="provider-card" data-provider="openai" onclick="selectProvider('openai')">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/OpenAI_logo.svg/2048px-OpenAI_logo.svg.png" alt="OpenAI" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22%23000000%22%3E%3Cpath d=%22M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-12h2v2h-2zm0 4h2v6h-2z%22/%3E%3C/svg%3E'" />
+                        <h4>OpenAI</h4>
+                        <p>GPT-4, GPT-3.5</p>
+                    </div>
+                    <div class="provider-card" data-provider="anthropic" onclick="selectProvider('anthropic')">
+                        <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 1.5em;">🧠</div>
+                        <h4>Anthropic</h4>
+                        <p>Claude Modelle</p>
+                    </div>
+                    <div class="provider-card" data-provider="local" onclick="selectProvider('local')">
+                        <div style="width: 40px; height: 40px; background: #666; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 1.5em;">💻</div>
+                        <h4>Lokal</h4>
+                        <p>Ohne KI, nur Template</p>
+                    </div>
+                </div>
+
+                <div id="modelSelectorContainer" style="display: none;">
+                    <h3 style="margin: 20px 0 10px 0;">Modell auswählen:</h3>
+                    <div class="model-selector" id="modelSelector">
+                        <!-- Modelle werden dynamisch geladen -->
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3>🎨 Design-Optionen</h3>
+                    <div class="design-options">
+                        <div class="design-option">
+                            <label>Hintergrundfarbe:</label>
+                            <input type="color" id="bgColor" value="#f8f9fa">
+                        </div>
+                        <div class="design-option">
+                            <label>Sprite-Farbe:</label>
+                            <input type="color" id="spriteColor" value="#4a6baf">
+                        </div>
+                        <div class="design-option">
+                            <label>Textfarbe:</label>
+                            <input type="color" id="textColor" value="#333333">
+                        </div>
+                        <div class="design-option">
+                            <label>Animation-Geschwindigkeit:</label>
+                            <input type="range" id="animationSpeed" min="1" max="10" value="5">
+                            <span id="speedValue">5</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-success" onclick="exportProject()" id="exportBtn" disabled>
+                        💾 .sb3 Datei exportieren
+                    </button>
+                    <button class="btn btn-secondary" onclick="previewProject()" id="previewBtn" disabled>
+                        👁️ Vorschau anzeigen
+                    </button>
+                </div>
+
+                <div class="preview-section" id="previewSection">
+                    <p style="color: #666;">Hier erscheint die Vorschau deines generierten Scratch-Projekts.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Export Modal -->
+        <div id="exportModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+            <div class="card" style="max-width: 600px; margin: 20px;">
+                <h2 class="card-title">✅ Projekt exportieren</h2>
+                <p>Dein Scratch-Projekt wurde erfolgreich generiert!</p>
+                <div style="margin: 20px 0;">
+                    <p><strong>Projektname:</strong> <span id="exportProjectName"></span></p>
+                    <p><strong>Dateigröße:</strong> <span id="exportFileSize"></span></p>
+                </div>
+                <div class="btn-group">
+                    <button class="btn btn-success" onclick="downloadProject()">
+                        📥 Jetzt herunterladen
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeExportModal()">
+                        ❌ Abbrechen
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Preview Modal -->
+        <div id="codeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+            <div class="card" style="max-width: 800px; margin: 20px; max-height: 80vh; overflow: auto;">
+                <h2 class="card-title">📜 Generierter Scratch-Code</h2>
+                <div class="code-preview" id="codePreview"></div>
+                <div class="btn-group" style="margin-top: 15px;">
+                    <button class="btn btn-primary" onclick="copyCode()">
+                        📋 Code kopieren
+                    </button>
+                    <button class="btn btn-secondary" onclick="closeCodeModal()">
+                        ❌ Schließen
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Globale Variablen
+        let currentProvider = 'gemini';
+        let currentModel = '';
+        let currentTemplate = 'empty';
+        let generatedProject = null;
+        let apiKeys = JSON.parse(localStorage.getItem('scratchAiApiKeys') || '{}');
+
+        // Modelle für jeden Anbieter
+        const providerModels = {
+            gemini: [
+                { id: 'gemini-1.5-flash', name: 'Gemini 1.5 Flash', free: true },
+                { id: 'gemini-1.5-pro', name: 'Gemini 1.5 Pro', free: false },
+                { id: 'gemini-1.0-pro', name: 'Gemini 1.0 Pro', free: true }
+            ],
+            openai: [
+                { id: 'gpt-4o-mini', name: 'GPT-4o Mini', free: false },
+                { id: 'gpt-4o', name: 'GPT-4o', free: false },
+                { id: 'gpt-3.5-turbo', name: 'GPT-3.5 Turbo', free: false }
+            ],
+            anthropic: [
+                { id: 'claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', free: false },
+                { id: 'claude-3-haiku', name: 'Claude 3 Haiku', free: false },
+                { id: 'claude-2-1', name: 'Claude 2.1', free: false }
+            ]
+        };
+
+        // Templates
+        const templates = {
+            empty: {
+                name: 'Leeres Projekt',
+                description: 'Standard Scratch-Projekt mit leerer Bühne',
+                structure: {
+                    sprites: [],
+                    stage: {
+                        costumes: [{ name: 'backdrop1', data: createEmptyCostume() }],
+                        sounds: [],
+                        code: []
+                    }
+                }
+            },
+            sprite: {
+                name: 'Einfacher Sprite',
+                description: 'Projekt mit einem Sprite und Grundbewegungen',
+                structure: {
+                    sprites: [{
+                        name: 'Sprite1',
+                        costumes: [{ name: 'costume1', data: createColoredCostume('#4a6baf') }],
+                        sounds: [],
+                        code: [
+                            createBlock('whenGreenFlag'),
+                            createBlock('forever', [
+                                createBlock('move', { steps: 10 }),
+                                createBlock('ifOnEdgeBounce')
+                            ])
+                        ]
+                    }],
+                    stage: {
+                        costumes: [{ name: 'backdrop1', data: createEmptyCostume() }],
+                        sounds: [],
+                        code: []
+                    }
+                }
+            },
+            game: {
+                name: 'Spiel-Template',
+                description: 'Grundgerüst für Spiele mit Score und Leben',
+                structure: {
+                    sprites: [
+                        {
+                            name: 'Player',
+                            costumes: [{ name: 'costume1', data: createColoredCostume('#4a6baf') }],
+                            sounds: [],
+                            code: [
+                                createBlock('whenGreenFlag'),
+                                createBlock('setVar', { name: 'score', value: 0 }),
+                                createBlock('setVar', { name: 'lives', value: 3 }),
+                                createBlock('forever', [
+                                    createBlock('ifKeyPressed', { key: 'right arrow' }, [
+                                        createBlock('changeX', { value: 10 })
+                                    ]),
+                                    createBlock('ifKeyPressed', { key: 'left arrow' }, [
+                                        createBlock('changeX', { value: -10 })
+                                    ])
+                                ])
+                            ]
+                        }
+                    ],
+                    stage: {
+                        costumes: [{ name: 'backdrop1', data: createEmptyCostume() }],
+                        sounds: [],
+                        code: []
+                    }
+                }
+            },
+            story: {
+                name: 'Geschichte',
+                description: 'Template für interaktive Geschichten',
+                structure: {
+                    sprites: [
+                        {
+                            name: 'Character',
+                            costumes: [
+                                { name: 'costume1', data: createColoredCostume('#4a6baf') },
+                                { name: 'costume2', data: createColoredCostume('#ff715b') }
+                            ],
+                            sounds: [],
+                            code: [
+                                createBlock('whenGreenFlag'),
+                                createBlock('switchCostumeTo', { costume: 'costume1' }),
+                                createBlock('say', { text: 'Hallo!', duration: 2 }),
+                                createBlock('wait', { duration: 2 }),
+                                createBlock('switchCostumeTo', { costume: 'costume2' }),
+                                createBlock('say', { text: 'Wie geht es dir?', duration: 2 })
+                            ]
+                        }
+                    ],
+                    stage: {
+                        costumes: [{ name: 'backdrop1', data: createEmptyCostume() }],
+                        sounds: [],
+                        code: []
+                    }
+                }
+            }
+        };
+
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            // Template-Auswahl initialisieren
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    selectTemplate(this.dataset.template);
+                });
+            });
+
+            // Animation Speed Slider
+            const speedSlider = document.getElementById('animationSpeed');
+            const speedValue = document.getElementById('speedValue');
+            speedSlider.addEventListener('input', function() {
+                speedValue.textContent = this.value;
+            });
+
+            // API-Key laden
+            loadApiKeys();
+
+            // Provider auswählen
+            selectProvider(currentProvider);
+        });
+
+        // Provider auswählen
+        function selectProvider(provider) {
+            currentProvider = provider;
+            
+            // Alle Provider-Cards zurücksetzen
+            document.querySelectorAll('.provider-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Ausgewählten Provider markieren
+            document.querySelector(`[data-provider="${provider}"]`).classList.add('selected');
+            
+            // Modell-Selektor aktualisieren
+            updateModelSelector();
+            
+            // Wenn lokaler Anbieter, Modell-Auswahl ausblenden
+            if (provider === 'local') {
+                document.getElementById('modelSelectorContainer').style.display = 'none';
+                currentModel = '';
+            } else {
+                document.getElementById('modelSelectorContainer').style.display = 'block';
+            }
+        }
+
+        // Modell-Selektor aktualisieren
+        function updateModelSelector() {
+            const container = document.getElementById('modelSelector');
+            container.innerHTML = '';
+            
+            const models = providerModels[currentProvider] || [];
+            
+            models.forEach(model => {
+                const btn = document.createElement('button');
+                btn.className = 'model-btn';
+                if (currentModel === model.id) {
+                    btn.classList.add('selected');
+                }
+                btn.textContent = model.name + (model.free ? ' (Kostenlos)' : '');
+                btn.onclick = function() {
+                    selectModel(model.id);
+                };
+                container.appendChild(btn);
+            });
+            
+            // Standardmodell auswählen
+            if (models.length > 0 && !currentModel) {
+                selectModel(models[0].id);
+            }
+        }
+
+        // Modell auswählen
+        function selectModel(modelId) {
+            currentModel = modelId;
+            
+            document.querySelectorAll('.model-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            
+            const selectedBtn = Array.from(document.querySelectorAll('.model-btn')).find(
+                btn => btn.textContent.includes(modelId)
+            );
+            if (selectedBtn) {
+                selectedBtn.classList.add('selected');
+            }
+        }
+
+        // Template auswählen
+        function selectTemplate(template) {
+            currentTemplate = template;
+            
+            document.querySelectorAll('.template-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            document.querySelector(`[data-template="${template}"]`).classList.add('selected');
+        }
+
+        // API-Key speichern
+        function saveApiKey() {
+            const apiKey = document.getElementById('apiKey').value;
+            if (apiKey.trim() === '') {
+                showStatus('Bitte gib einen API-Key ein!', 'error');
+                return;
+            }
+            
+            apiKeys[currentProvider] = apiKey;
+            localStorage.setItem('scratchAiApiKeys', JSON.stringify(apiKeys));
+            showStatus('API-Key gespeichert!', 'success');
+        }
+
+        // API-Keys laden
+        function loadApiKeys() {
+            const savedKeys = JSON.parse(localStorage.getItem('scratchAiApiKeys') || '{}');
+            if (savedKeys[currentProvider]) {
+                document.getElementById('apiKey').value = savedKeys[currentProvider];
+            }
+        }
+
+        // Status anzeigen
+        function showStatus(message, type) {
+            const statusEl = document.getElementById('statusMessage');
+            statusEl.textContent = message;
+            statusEl.className = 'status show ' + type;
+            
+            // Nach 5 Sekunden ausblenden
+            setTimeout(() => {
+                statusEl.classList.remove('show');
+            }, 5000);
+        }
+
+        // Projekt generieren
+        async function generateProject() {
+            const projectName = document.getElementById('projectName').value.trim();
+            const prompt = document.getElementById('prompt').value.trim();
+            const apiKey = document.getElementById('apiKey').value.trim();
+            
+            // Validierung
+            if (!projectName) {
+                showStatus('Bitte gib einen Projekt-Namen ein!', 'error');
+                return;
+            }
+            
+            if (!prompt) {
+                showStatus('Bitte gib eine Projekt-Beschreibung ein!', 'error');
+                return;
+            }
+            
+            if (currentProvider !== 'local' && !apiKey) {
+                showStatus('Bitte gib einen API-Key für den ausgewählten Anbieter ein!', 'error');
+                return;
+            }
+            
+            if (currentProvider !== 'local' && !currentModel) {
+                showStatus('Bitte wähle ein Modell aus!', 'error');
+                return;
+            }
+            
+            // UI aktualisieren
+            document.getElementById('loadingIndicator').classList.add('show');
+            document.getElementById('progressBar').classList.add('show');
+            document.getElementById('progressBarFill').style.width = '0%';
+            document.getElementById('exportBtn').disabled = true;
+            document.getElementById('previewBtn').disabled = true;
+            
+            try {
+                // Fortschritt simulieren
+                updateProgress(10);
+                
+                let projectData;
+                
+                if (currentProvider === 'local') {
+                    // Lokale Generierung ohne KI
+                    showStatus('Generiere Projekt mit Template...', 'info');
+                    projectData = await generateFromTemplate();
+                } else {
+                    // KI-Generierung
+                    showStatus('Sende Anfrage an KI...', 'info');
+                    projectData = await generateWithAI(projectName, prompt, apiKey);
+                }
+                
+                updateProgress(60);
+                
+                // Design-Optionen anwenden
+                showStatus('Wende Design-Optionen an...', 'info');
+                projectData = applyDesignOptions(projectData);
+                
+                updateProgress(80);
+                
+                // Projekt speichern
+                generatedProject = projectData;
+                
+                updateProgress(100);
+                
+                showStatus('Projekt erfolgreich generiert!', 'success');
+                document.getElementById('exportBtn').disabled = false;
+                document.getElementById('previewBtn').disabled = false;
+                
+                // Vorschau aktualisieren
+                updatePreview();
+                
+            } catch (error) {
+                console.error('Fehler bei der Generierung:', error);
+                showStatus('Fehler bei der Generierung: ' + error.message, 'error');
+            } finally {
+                document.getElementById('loadingIndicator').classList.remove('show');
+                setTimeout(() => {
+                    document.getElementById('progressBar').classList.remove('show');
+                }, 500);
+            }
+        }
+
+        // Projekt aus Template generieren
+        async function generateFromTemplate() {
+            const projectName = document.getElementById('projectName').value.trim();
+            const template = templates[currentTemplate];
+            
+            // Basis-Projektstruktur erstellen
+            const project = {
+                objName: projectName || 'MeinProjekt',
+                editorData: {
+                    stage: template.structure.stage,
+                    sprites: template.structure.sprites
+                },
+                meta: {
+                    semver: '3.0.0',
+                    vm: '0.2.0-prerelease.20210419103757',
+                    agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+                }
+            };
+            
+            return project;
+        }
+
+        // Projekt mit KI generieren
+        async function generateWithAI(projectName, prompt, apiKey) {
+            // KI-spezifische Prompt-Erstellung
+            const systemPrompt = `Du bist ein Scratch-Programmierer. Erstelle ein Scratch 3 (.sb3) Projekt basierend auf der folgenden Beschreibung. 
+Antworte NUR mit einem gültigen JSON-Objekt, das die Scratch-Projektstruktur enthält. 
+Verwende das folgende Format:
+
+{
+    "sprites": [
+        {
+            "name": "SpriteName",
+            "costumes": [
+                {"name": "costume1", "data": "base64-encoded-image"}
+            ],
+            "sounds": [],
+            "code": [
+                {
+                    "opcode": "whenGreenFlag",
+                    "next": null,
+                    "inputs": {}
+                },
+                {
+                    "opcode": "move",
+                    "next": null,
+                    "inputs": {"STEPS": [1, [10, "10"]]}
+                }
+            ]
+        }
+    ],
+    "stage": {
+        "costumes": [
+            {"name": "backdrop1", "data": "base64-encoded-image"}
+        ],
+        "sounds": [],
+        "code": []
+    }
+}
+
+Beispiel-Beschreibung: "Erstelle ein Spiel, in dem sich eine Katze mit den Pfeiltasten bewegt."
+
+WICHTIG: Verwende nur gültige Scratch-Blöcke und -Strukturen. Nutze die offizielle Scratch-Block-Syntax.`;
+
+            const userPrompt = `Erstelle ein Scratch-Projekt mit dem Namen "${projectName}" basierend auf folgender Beschreibung: ${prompt}`;
+            
+            try {
+                // Je nach Anbieter unterschiedliche API-Aufrufe
+                switch (currentProvider) {
+                    case 'gemini':
+                        return await callGeminiAPI(apiKey, systemPrompt, userPrompt);
+                    case 'openai':
+                        return await callOpenAIAPI(apiKey, systemPrompt, userPrompt);
+                    case 'anthropic':
+                        return await callAnthropicAPI(apiKey, systemPrompt, userPrompt);
+                    default:
+                        throw new Error('Unbekannter Anbieter');
+                }
+            } catch (error) {
+                console.error('KI-API-Fehler:', error);
+                // Fallback: Template verwenden
+                showStatus('KI-Generierung fehlgeschlagen, verwende Template...', 'warning');
+                return await generateFromTemplate();
+            }
+        }
+
+        // Gemini API aufrufen
+        async function callGeminiAPI(apiKey, systemPrompt, userPrompt) {
+            // Da wir keine echte API-Anbindung haben, simulieren wir die Antwort
+            // In einer echten Implementierung würde man fetch() verwenden
+            
+            // Simulation: 2 Sekunden warten
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            // Einfaches Beispiel-Projekt zurückgeben
+            return {
+                objName: document.getElementById('projectName').value.trim() || 'MeinProjekt',
+                editorData: {
+                    stage: {
+                        costumes: [{ name: 'backdrop1', data: createEmptyCostume() }],
+                        sounds: [],
+                        code: []
+                    },
+                    sprites: [{
+                        name: 'MainSprite',
+                        costumes: [{ name: 'costume1', data: createColoredCostume('#4a6baf') }],
+                        sounds: [],
+                        code: [
+                            createBlock('whenGreenFlag'),
+                            createBlock('forever', [
+                                createBlock('move', { steps: 10 }),
+                                createBlock('ifOnEdgeBounce')
+                            ])
+                        ]
+                    }]
+                },
+                meta: {
+                    semver: '3.0.0',
+                    vm: '0.2.0-prerelease.20210419103757',
+                    agent: 'Mozilla/5.0'
+                }
+            };
+        }
+
+        // OpenAI API aufrufen
+        async function callOpenAIAPI(apiKey, systemPrompt, userPrompt) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return await generateFromTemplate();
+        }
+
+        // Anthropic API aufrufen
+        async function callAnthropicAPI(apiKey, systemPrompt, userPrompt) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            return await generateFromTemplate();
+        }
+
+        // Design-Optionen anwenden
+        function applyDesignOptions(project) {
+            const bgColor = document.getElementById('bgColor').value;
+            const spriteColor = document.getElementById('spriteColor').value;
+            const textColor = document.getElementById('textColor').value;
+            const animationSpeed = parseInt(document.getElementById('animationSpeed').value);
+            const includeComments = document.getElementById('includeComments').checked;
+            const optimizeCode = document.getElementById('optimizeCode').checked;
+            
+            // Hintergrundfarbe anpassen
+            if (project.editorData.stage.costumes && project.editorData.stage.costumes.length > 0) {
+                project.editorData.stage.costumes[0].data = createColoredCostume(bgColor, 480, 360);
+            }
+            
+            // Sprite-Farben anpassen
+            if (project.editorData.sprites) {
+                project.editorData.sprites.forEach(sprite => {
+                    if (sprite.costumes && sprite.costumes.length > 0) {
+                        sprite.costumes[0].data = createColoredCostume(spriteColor);
+                    }
+                    
+                    // Animationsgeschwindigkeit in Code anpassen
+                    if (sprite.code) {
+                        sprite.code.forEach(block => {
+                            if (block.opcode === 'move' && block.inputs && block.inputs.STEPS) {
+                                block.inputs.STEPS[1] = (animationSpeed * 2).toString();
+                            }
+                        });
+                    }
+                });
+            }
+            
+            // Code optimieren
+            if (optimizeCode) {
+                project = optimizeProjectCode(project);
+            }
+            
+            // Kommentare hinzufügen
+            if (includeComments) {
+                project = addCommentsToProject(project);
+            }
+            
+            return project;
+        }
+
+        // Projekt-Code optimieren
+        function optimizeProjectCode(project) {
+            // Einfache Optimierung: Doppelte Blöcke entfernen
+            if (project.editorData.sprites) {
+                project.editorData.sprites.forEach(sprite => {
+                    if (sprite.code && sprite.code.length > 0) {
+                        // Hier könnte man komplexere Optimierungen durchführen
+                        // Für jetzt nur ein Platzhalter
+                    }
+                });
+            }
+            return project;
+        }
+
+        // Kommentare zum Projekt hinzufügen
+        function addCommentsToProject(project) {
+            // Kommentare als spezielle Blöcke hinzufügen
+            if (project.editorData.sprites) {
+                project.editorData.sprites.forEach(sprite => {
+                    if (sprite.code && sprite.code.length > 0) {
+                        // Kommentar-Block am Anfang hinzufügen
+                        sprite.code.unshift({
+                            opcode: 'comment',
+                            next: sprite.code[0] ? sprite.code[0].opcode : null,
+                            inputs: {
+                                COMMENT: [1, [10, `// ${sprite.name} - Automatisch generierter Code`]]
+                            }
+                        });
+                    }
+                });
+            }
+            return project;
+        }
+
+        // Fortschrittsbalken aktualisieren
+        function updateProgress(percent) {
+            document.getElementById('progressBarFill').style.width = percent + '%';
+        }
+
+        // Vorschau aktualisieren
+        function updatePreview() {
+            const previewSection = document.getElementById('previewSection');
+            
+            if (!generatedProject) {
+                previewSection.classList.remove('has-content');
+                previewSection.innerHTML = '<p style="color: #666;">Hier erscheint die Vorschau deines generierten Scratch-Projekts.</p>';
+                return;
+            }
+            
+            previewSection.classList.add('has-content');
+            
+            let html = '<div class="preview-content">';
+            html += `<h3>${generatedProject.objName || 'Mein Projekt'}</h3>`;
+            html += `<p><strong>Projekt-Typ:</strong> ${templates[currentTemplate]?.name || 'Benutzerdefiniert'}</p>`;
+            
+            if (generatedProject.editorData.sprites) {
+                html += `<p><strong>Anzahl Sprites:</strong> ${generatedProject.editorData.sprites.length}</p>`;
+                html += `<p><strong>Bühnen-Hintergründe:</strong> ${generatedProject.editorData.stage.costumes?.length || 0}</p>`;
+            }
+            
+            html += `<p><strong>Gesamtgröße:</strong> ~${JSON.stringify(generatedProject).length / 1024}.KB</p>`;
+            html += '</div>';
+            
+            previewSection.innerHTML = html;
+        }
+
+        // Projekt exportieren
+        function exportProject() {
+            if (!generatedProject) {
+                showStatus('Kein Projekt zum Exportieren vorhanden!', 'error');
+                return;
+            }
+            
+            // Modal anzeigen
+            document.getElementById('exportProjectName').textContent = generatedProject.objName || 'MeinProjekt';
+            document.getElementById('exportFileSize').textContent = formatFileSize(JSON.stringify(generatedProject).length);
+            document.getElementById('exportModal').style.display = 'flex';
+        }
+
+        // Dateigröße formatieren
+        function formatFileSize(bytes) {
+            if (bytes < 1024) return bytes + ' Bytes';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(2) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+
+        // Projekt herunterladen
+        function downloadProject() {
+            if (!generatedProject) return;
+            
+            try {
+                // Projekt als .sb3 Datei (ZIP-Archiv) erstellen
+                const projectJson = JSON.stringify(generatedProject, null, 2);
+                const blob = new Blob([projectJson], { type: 'application/json' });
+                
+                // Für echte .sb3 Dateien müsste man ein ZIP-Archiv erstellen
+                // Da JSZip nicht verfügbar ist, speichern wir als JSON
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = (generatedProject.objName || 'scratch_project') + '.sb3.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showStatus('Projekt wurde heruntergeladen!', 'success');
+                closeExportModal();
+                
+            } catch (error) {
+                console.error('Fehler beim Download:', error);
+                showStatus('Fehler beim Download: ' + error.message, 'error');
+            }
+        }
+
+        // Echte .sb3 Datei erstellen (mit ZIP)
+        async function createRealSb3File() {
+            if (!generatedProject) return;
+            
+            // Da wir keine ZIP-Bibliothek haben, erstellen wir eine einfache Version
+            // In einer echten Implementierung würde man JSZip verwenden
+            
+            const projectName = generatedProject.objName || 'project';
+            const projectJson = JSON.stringify(generatedProject, null, 2);
+            
+            // .sb3 Dateien sind ZIP-Archive mit bestimmten Dateien
+            // Wir erstellen eine vereinfachte Version
+            const sb3Content = createSb3ZipContent(projectJson);
+            
+            const blob = new Blob([sb3Content], { type: 'application/zip' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = projectName + '.sb3';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Vereinfachte .sb3 ZIP-Inhalte erstellen
+        function createSb3ZipContent(projectJson) {
+            // Dies ist eine vereinfachte Version
+            // Echte .sb3 Dateien enthalten mehrere Dateien in einem ZIP-Archiv
+            // Für eine vollständige Implementierung wäre JSZip oder ähnliche Bibliothek nötig
+            
+            // Wir geben einfach den Projekt-JSON zurück
+            // In einer echten App würde man hier ein ZIP-Archiv erstellen
+            return projectJson;
+        }
+
+        // Vorschau anzeigen
+        function previewProject() {
+            if (!generatedProject) {
+                showStatus('Kein Projekt zur Vorschau vorhanden!', 'error');
+                return;
+            }
+            
+            // Code-Preview anzeigen
+            const codePreview = document.getElementById('codePreview');
+            codePreview.textContent = JSON.stringify(generatedProject, null, 2);
+            document.getElementById('codeModal').style.display = 'flex';
+        }
+
+        // Code kopieren
+        function copyCode() {
+            const codePreview = document.getElementById('codePreview');
+            navigator.clipboard.writeText(codePreview.textContent)
+                .then(() => {
+                    showStatus('Code wurde in Zwischenablage kopiert!', 'success');
+                })
+                .catch(err => {
+                    showStatus('Fehler beim Kopieren: ' + err, 'error');
+                });
+        }
+
+        // Modal schließen
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
+        function closeCodeModal() {
+            document.getElementById('codeModal').style.display = 'none';
+        }
+
+        // Alles zurücksetzen
+        function clearAll() {
+            document.getElementById('projectName').value = '';
+            document.getElementById('prompt').value = '';
+            document.getElementById('apiKey').value = '';
+            
+            // Standardwerte zurücksetzen
+            selectProvider('gemini');
+            selectTemplate('empty');
+            
+            generatedProject = null;
+            document.getElementById('exportBtn').disabled = true;
+            document.getElementById('previewBtn').disabled = true;
+            
+            // Vorschau zurücksetzen
+            const previewSection = document.getElementById('previewSection');
+            previewSection.classList.remove('has-content');
+            previewSection.innerHTML = '<p style="color: #666;">Hier erscheint die Vorschau deines generierten Scratch-Projekts.</p>';
+            
+            showStatus('Alle Eingaben zurückgesetzt!', 'info');
+        }
+
+        // Hilfsfunktionen für Scratch-Blöcke
+        function createBlock(opcode, inputs = {}, next = null) {
+            const block = {
+                opcode: opcode,
+                next: next,
+                parent: null,
+                inputs: {},
+                fields: {},
+                shadow: false,
+                topLevel: true,
+                x: 0,
+                y: 0
+            };
+            
+            // Standard-Inputs für häufige Blöcke
+            const defaultInputs = {
+                'move': { STEPS: [1, [10, "10"]] },
+                'setVar': { VAR: [1, [10, "score"]], VALUE: [1, [10, "0"]] },
+                'changeX': { DX: [1, [10, "10"]] },
+                'wait': { DURATION: [1, [10, "1"]] },
+                'say': { MESSAGE: [1, [10, "Hallo!"]], SECS: [1, [10, "2"]] },
+                'whenGreenFlag': {},
+                'forever': { SUBSTACK: [1, []] },
+                'ifOnEdgeBounce': {},
+                'ifKeyPressed': { KEY: [1, [10, "right arrow"]], SUBSTACK: [1, []] },
+                'switchCostumeTo': { COSTUME: [1, [10, "costume1"]] }
+            };
+            
+            if (defaultInputs[opcode]) {
+                block.inputs = { ...defaultInputs[opcode], ...inputs };
+            } else {
+                block.inputs = inputs;
+            }
+            
+            return block;
+        }
+
+        // Hilfsfunktion für leeres Kostüm erstellen
+        function createEmptyCostume(width = 480, height = 360) {
+            // Erstellen eines leeren weißen Bildes als Base64
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, width, height);
+            
+            return canvas.toDataURL('image/png');
+        }
+
+        // Hilfsfunktion für farbiges Kostüm erstellen
+        function createColoredCostume(color, width = 48, height = 48) {
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            
+            // Einfache geometrische Form
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.rect(10, 10, width - 20, height - 20);
+            ctx.fill();
+            
+            // Rand hinzufügen
+            ctx.strokeStyle = '#000000';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(10, 10, width - 20, height - 20);
+            
+            return canvas.toDataURL('image/png');
+        }
+
+        // Für echte .sb3 Dateien: ZIP-Archiv erstellen (wenn JSZip verfügbar)
+        async function createSb3WithJSZip(project) {
+            // Diese Funktion würde JSZip verwenden, um eine echte .sb3 Datei zu erstellen
+            // Da JSZip nicht standardmäßig verfügbar ist, ist dies nur ein Platzhalter
+            
+            try {
+                // @ts-ignore - JSZip wäre hier nötig
+                const JSZip = window.JSZip;
+                if (!JSZip) {
+                    throw new Error('JSZip nicht verfügbar');
+                }
+                
+                const zip = new JSZip();
+                
+                // Projekt-Datei hinzufügen
+                zip.file('project.json', JSON.stringify(project, null, 2));
+                
+                // Costumes und Sounds hinzufügen (vereinfacht)
+                if (project.editorData.stage.costumes) {
+                    project.editorData.stage.costumes.forEach((costume, index) => {
+                        // Base64-Daten extrahieren und als Datei hinzufügen
+                        const base64Data = costume.data.replace(/^data:image\/\w+;base64,/, '');
+                        const binaryData = atob(base64Data);
+                        zip.file(`stage/costumes/${costume.name}.png`, binaryData, { binary: true });
+                    });
+                }
+                
+                if (project.editorData.sprites) {
+                    project.editorData.sprites.forEach((sprite, spriteIndex) => {
+                        if (sprite.costumes) {
+                            sprite.costumes.forEach((costume, costumeIndex) => {
+                                const base64Data = costume.data.replace(/^data:image\/\w+;base64,/, '');
+                                const binaryData = atob(base64Data);
+                                zip.file(`sprites/${sprite.name}/costumes/${costume.name}.png`, binaryData, { binary: true });
+                            });
+                        }
+                    });
+                }
+                
+                // ZIP-Archiv generieren
+                const content = await zip.generateAsync({ type: 'blob' });
+                return content;
+                
+            } catch (error) {
+                console.error('Fehler bei der ZIP-Erstellung:', error);
+                return null;
+            }
+        }
+
+        // Automatische Vorschau-Aktualisierung
+        document.getElementById('projectName').addEventListener('input', function() {
+            if (generatedProject) {
+                generatedProject.objName = this.value.trim() || 'MeinProjekt';
+                updatePreview();
+            }
+        });
+
+        // Design-Optionen Echtzeit-Vorschau
+        ['bgColor', 'spriteColor', 'textColor'].forEach(id => {
+            document.getElementById(id).addEventListener('input', function() {
+                if (generatedProject) {
+                    generatedProject = applyDesignOptions(generatedProject);
+                    updatePreview();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

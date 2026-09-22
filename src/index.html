@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Scratch Vibe Coding IDE - Entwickle Scratch-Projekte durch Code">
+    <title>Scratch Vibe Coding IDE</title>
+    
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/reset.css">
+    <link rel="stylesheet" href="styles/variables.css">
+    <link rel="stylesheet" href="styles/main.css">
+    
+    <!-- CodeMirror for Code Editor -->
+    <link rel="stylesheet" href="lib/codemirror/codemirror.css">
+    <link rel="stylesheet" href="lib/codemirror/theme/dracula.css">
+    <link rel="stylesheet" href="lib/codemirror/addon/fold/foldgutter.css">
+    <link rel="stylesheet" href="lib/codemirror/addon/dialog/dialog.css">
+    <link rel="stylesheet" href="lib/codemirror/addon/search/matchesonscrollbar.css">
+    
+    <!-- Custom CodeMirror Theme -->
+    <link rel="stylesheet" href="styles/codemirror-theme.css">
+    
+    <!-- Font Awesome for Icons (loaded from CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- JSZip for .sb3 file creation -->
+    <script src="lib/jszip.min.js"></script>
+    
+    <!-- Local Storage Polyfill -->
+    <script src="lib/localforage.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- ============================================
+             HEADER
+             ============================================ -->
+        <header id="header">
+            <div class="header-left">
+                <button class="btn btn-icon sidebar-toggle" title="Sidebar umschalten">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="project-info">
+                    <span class="project-name" id="projectNameDisplay">Unbenanntes Projekt</span>
+                    <span class="project-status" id="projectStatus">- Nicht gespeichert</span>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <div class="action-buttons">
+                    <button class="btn btn-secondary btn-sm" id="btnSave" title="Speichern (Ctrl+S)">
+                        <i class="fas fa-save"></i> <span class="btn-text">Speichern</span>
+                    </button>
+                    <span class="autosave-status" id="autosaveStatus">
+                        <i class="fas fa-circle"></i> Autosave
+                    </span>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="action-buttons">
+                    <button class="btn btn-secondary btn-icon" id="btnUndo" title="Rückgängig (Ctrl+Z)">
+                        <i class="fas fa-undo"></i>
+                    </button>
+                    <button class="btn btn-secondary btn-icon" id="btnRedo" title="Wiederholen (Ctrl+Y)">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button class="btn btn-success btn-icon" id="btnRun" title="Ausführen (F5)">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="btn btn-danger btn-icon" id="btnStop" title="Stoppen (F6)">
+                        <i class="fas fa-stop"></i>
+                    </button>
+                    <button class="btn btn-secondary btn-icon" id="btnPause" title="Pausieren">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                    <button class="btn btn-secondary btn-icon" id="btnRestart" title="Neu starten">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button class="btn btn-secondary btn-icon" id="btnDebug" title="Debuggen (F7)">
+                        <i class="fas fa-bug"></i>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="btnExport" title="Exportieren">
+                        <i class="fas fa-file-export"></i> <span class="btn-text">.sb3 Export</span>
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="btnImport" title="Importieren">
+                        <i class="fas fa-file-import"></i> <span class="btn-text">Import</span>
+                    </button>
+                    <button class="btn btn-secondary btn-icon" id="btnSettings" title="Einstellungen (Ctrl+,)">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                
+                <div class="user-section">
+                    <button class="btn btn-secondary btn-sm" id="btnLogin" title="Anmelden">
+                        <i class="fas fa-user"></i> <span class="btn-text">Anmelden</span>
+                    </button>
+                    <div class="user-menu" id="userMenu" style="display: none;">
+                        <div class="user-info">
+                            <span class="user-name" id="userName">Benutzer</span>
+                            <span class="user-email" id="userEmail">user@example.com</span>
+                        </div>
+                        <div class="user-actions">
+                            <button class="user-action-btn" id="btnProfile">
+                                <i class="fas fa-user-circle"></i> Profil
+                            </button>
+                            <button class="user-action-btn" id="btnProjects">
+                                <i class="fas fa-folder"></i> Meine Projekte
+                            </button>
+                            <button class="user-action-btn" id="btnLogout">
+                                <i class="fas fa-sign-out-alt"></i> Abmelden
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ============================================
+             SIDEBAR - Project Explorer
+             ============================================ -->
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <span class="sidebar-title">Projekt-Explorer</span>
+                <div class="sidebar-actions">
+                    <button class="btn btn-icon btn-sm" id="btnNewFile" title="Neue Datei">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                    <button class="btn btn-icon btn-sm" id="btnRefresh" title="Aktualisieren">
+                        <i class="fas fa-sync"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="project-explorer" id="projectExplorer">
+                    <!-- Tree structure will be generated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="sidebar-footer">
+                <input type="text" class="input input-sm" id="treeSearch" placeholder="Suche in Dateien...">
+            </div>
+        </aside>
+
+        <!-- ============================================
+             EDITOR AREA
+             ============================================ -->
+        <main id="editor-container">
+            <div class="editor-header">
+                <div class="editor-tabs" id="editorTabs">
+                    <!-- Tabs will be generated by JavaScript -->
+                </div>
+                <div class="editor-actions">
+                    <button class="btn btn-icon btn-sm" id="btnFormatCode" title="Code formatieren">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <button class="btn btn-icon btn-sm" id="btnSearch" title="Suchen (Ctrl+F)">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="btn btn-icon btn-sm" id="btnCommandPalette" title="Befehlspalette (Ctrl+P)">
+                        <i class="fas fa-terminal"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="editor-main">
+                <div class="editor-wrapper">
+                    <!-- CodeMirror Editor will be initialized here -->
+                    <textarea id="codeEditor" style="display: none;"></textarea>
+                </div>
+                
+                <!-- Minimap (optional) -->
+                <div class="editor-minimap" id="editorMinimap">
+                    <canvas class="editor-minimap-canvas" id="minimapCanvas"></canvas>
+                </div>
+            </div>
+        </main>
+
+        <!-- ============================================
+             PREVIEW PANEL
+             ============================================ -->
+        <aside id="preview-container">
+            <div class="preview-header">
+                <span class="preview-title">Live Preview</span>
+                <div class="preview-controls">
+                    <button class="btn btn-icon btn-sm preview-btn" id="btnPreviewRun" title="Ausführen">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <button class="btn btn-icon btn-sm preview-btn" id="btnPreviewStop" title="Stoppen">
+                        <i class="fas fa-stop"></i>
+                    </button>
+                    <button class="btn btn-icon btn-sm preview-btn" id="btnPreviewFullscreen" title="Vollbild">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button class="btn btn-icon btn-sm preview-btn" id="btnPreviewVolume" title="Lautstärke">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <button class="btn btn-icon btn-sm preview-btn" id="btnPreviewDebug" title="Debug">
+                        <i class="fas fa-bug"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="preview-main">
+                <!-- Scratch Runtime Canvas -->
+                <div id="scratchPreview" class="preview-canvas">
+                    <canvas id="scratchCanvas" width="480" height="360"></canvas>
+                </div>
+            </div>
+            
+            <div class="preview-status">
+                <span id="previewFPS">FPS: 0</span>
+                <span id="previewStatus">Bereit</span>
+                <span id="previewScene">Szene: Keine</span>
+            </div>
+        </aside>
+
+        <!-- ============================================
+             STATUS BAR
+             ============================================ -->
+        <footer id="statusbar">
+            <div class="statusbar-left">
+                <span class="statusbar-item" id="statusCursor">Zeile: 1, Spalte: 1</span>
+                <span class="statusbar-item" id="statusEncoding">UTF-8</span>
+                <span class="statusbar-item" id="statusLanguage">Vibe Code</span>
+            </div>
+            
+            <div class="statusbar-center">
+                <span class="statusbar-item" id="statusErrors">0 Fehler</span>
+                <span class="statusbar-item" id="statusWarnings">0 Warnungen</span>
+            </div>
+            
+            <div class="statusbar-right">
+                <span class="statusbar-item" id="statusTime">00:00:00</span>
+                <span class="statusbar-item" id="statusDate">01.01.2024</span>
+                <button class="btn btn-icon btn-sm" id="btnThemeToggle" title="Theme umschalten">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ============================================
+         MODALS
+         ============================================ -->
+    
+    <!-- Login Modal -->
+    <div class="modal-overlay" id="loginModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Anmelden</h2>
+                <button class="modal-close" id="loginModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="loginEmail">E-Mail</label>
+                        <input type="email" class="input" id="loginEmail" placeholder="deine@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="loginPassword">Passwort</label>
+                        <input type="password" class="input" id="loginPassword" placeholder="Passwort" required>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="loginRemember"> Angemeldet bleiben
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="loginModalCancel">Abbrechen</button>
+                <button class="btn btn-primary" id="loginModalSubmit">Anmelden</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal-overlay" id="registerModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Registrieren</h2>
+                <button class="modal-close" id="registerModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label" for="registerName">Name</label>
+                        <input type="text" class="input" id="registerName" placeholder="Dein Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerEmail">E-Mail</label>
+                        <input type="email" class="input" id="registerEmail" placeholder="deine@email.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerPassword">Passwort</label>
+                        <input type="password" class="input" id="registerPassword" placeholder="Passwort" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="registerConfirmPassword">Passwort bestätigen</label>
+                        <input type="password" class="input" id="registerConfirmPassword" placeholder="Passwort bestätigen" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="registerModalCancel">Abbrechen</button>
+                <button class="btn btn-primary" id="registerModalSubmit">Registrieren</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Project Modal -->
+    <div class="modal-overlay" id="newProjectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Neues Projekt</h2>
+                <button class="modal-close" id="newProjectModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="newProjectForm">
+                    <div class="form-group">
+                        <label class="form-label" for="newProjectName">Projektname</label>
+                        <input type="text" class="input" id="newProjectName" placeholder="Mein Projekt" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newProjectTemplate">Template</label>
+                        <select class="input" id="newProjectTemplate">
+                            <option value="empty">Leeres Projekt</option>
+                            <option value="sprite">Einfacher Sprite</option>
+                            <option value="game">Spiel-Template</option>
+                            <option value="story">Geschichte</option>
+                            <option value="platformer">Plattformer</option>
+                            <option value="shooter">Shooter</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="newProjectDescription">Beschreibung</label>
+                        <textarea class="input" id="newProjectDescription" placeholder="Projektbeschreibung..." rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="newProjectModalCancel">Abbrechen</button>
+                <button class="btn btn-primary" id="newProjectModalSubmit">Erstellen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal" style="max-width: 700px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Einstellungen</h2>
+                <button class="modal-close" id="settingsModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-tabs">
+                    <button class="settings-tab active" data-tab="general">Allgemein</button>
+                    <button class="settings-tab" data-tab="editor">Editor</button>
+                    <button class="settings-tab" data-tab="preview">Preview</button>
+                    <button class="settings-tab" data-tab="compile">Kompilieren</button>
+                </div>
+                
+                <div class="settings-content" id="settingsContent">
+                    <!-- General Settings -->
+                    <div class="settings-panel active" id="settingsGeneral">
+                        <h3>Allgemeine Einstellungen</h3>
+                        <div class="form-group">
+                            <label class="form-label" for="settingTheme">Theme</label>
+                            <select class="input" id="settingTheme">
+                                <option value="dark">Dunkel</option>
+                                <option value="light">Hell</option>
+                                <option value="high-contrast">Hoher Kontrast</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="settingLanguage">Sprache</label>
+                            <select class="input" id="settingLanguage">
+                                <option value="de">Deutsch</option>
+                                <option value="en">Englisch</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="settingAutosave"> Autosave aktivieren
+                            </label>
+                            <span class="form-hint">Speichert automatisch alle 30 Sekunden</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="settingAutosaveInterval">Autosave-Intervall (Sekunden)</label>
+                            <input type="number" class="input" id="settingAutosaveInterval" value="30" min="5" max="300">
+                        </div>
+                    </div>
+                    
+                    <!-- Editor Settings -->
+                    <div class="settings-panel" id="settingsEditor">
+                        <h3>Editor-Einstellungen</h3>
+                        <div class="form-group">
+                            <label class="form-label" for="settingFontSize">Schriftgröße</label>
+                            <input type="number" class="input" id="settingFontSize" value="14" min="8" max="24">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="settingTabSize">Tab-Größe</label>
+                            <input type="number" class="input" id="settingTabSize" value="4" min="1" max="8">
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="settingShowMinimap"> Minimap anzeigen
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="settingWordWrap"> Zeilenumbruch
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="settingLineNumbers"> Zeilennummern
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="settingAutoComplete"> Autovervollständigung
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Preview Settings -->
+                    <div class="settings-panel" id="settingsPreview">
+                        <h3>Preview-Einstellungen</h3>
+                        <div class="form-group">
+                            <label class="form-label" for="settingPreviewScale">Skalierung</label>
+                            <select class="input" id="settingPreviewScale">
+                                <option value="1">100%</option>
+                                <option value="0.75">75%</option>
+                                <option value="0.5">50%</option>
+                                <option value="2">200%</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="settingShowFPS"> FPS anzeigen
+                            </label>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="settingShowDebug"> Debug-Info anzeigen
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Compile Settings -->
+                    <div class="settings-panel" id="settingsCompile">
+                        <h3>Kompilier-Einstellungen</h3>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="settingAutoCompile"> Automatisch kompilieren
+                            </label>
+                            <span class="form-hint">Kompiliert automatisch bei Code-Änderungen</span>
+                        </div>
+                        <div class="form-group">
+                            <label>
+                                <input type="checkbox" id="settingStrictMode"> Streng-Modus
+                            </label>
+                            <span class="form-hint">Striktere Fehlerprüfung</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="settingOptimization">Optimierungslevel</label>
+                            <select class="input" id="settingOptimization">
+                                <option value="none">Keine</option>
+                                <option value="basic">Grundlegend</option>
+                                <option value="advanced">Erweitert</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="settingsModalCancel">Abbrechen</button>
+                <button class="btn btn-primary" id="settingsModalSave">Speichern</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Command Palette Modal -->
+    <div class="modal-overlay" id="commandPaletteModal">
+        <div class="modal" style="max-width: 500px; max-height: 60vh;">
+            <div class="modal-header">
+                <input type="text" class="input" id="commandPaletteSearch" placeholder="Befehl suchen..." autofocus>
+                <button class="modal-close" id="commandPaletteClose">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <div class="command-list" id="commandList">
+                    <!-- Commands will be populated by JavaScript -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="command-hint">Tip: Nutze Pfeiltasten zur Auswahl</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Debug Console -->
+    <div class="modal-overlay" id="debugConsoleModal">
+        <div class="modal" style="max-width: 800px; max-height: 70vh;">
+            <div class="modal-header">
+                <h2 class="modal-title">Debug-Konsole</h2>
+                <button class="modal-close" id="debugConsoleClose">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <div class="debug-console" id="debugConsole">
+                    <div class="debug-output" id="debugOutput"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="debugConsoleClear">Konsole leeren</button>
+                <button class="btn btn-primary" id="debugConsoleCloseBtn">Schließen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal-overlay" id="exportModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Projekt exportieren</h2>
+                <button class="modal-close" id="exportModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label" for="exportFilename">Dateiname</label>
+                    <input type="text" class="input" id="exportFilename" value="mein_projekt">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="exportWithAssets" checked> Assets einbeziehen
+                    </label>
+                </div>
+                <div class="export-info">
+                    <p><strong>Projektname:</strong> <span id="exportProjectName">Unbenannt</span></p>
+                    <p><strong>Größe:</strong> <span id="exportFileSize">0 KB</span></p>
+                    <p><strong>Sprites:</strong> <span id="exportSpriteCount">0</span></p>
+                    <p><strong>Szenen:</strong> <span id="exportSceneCount">0</span></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="exportModalCancel">Abbrechen</button>
+                <button class="btn btn-primary" id="exportModalSubmit">Exportieren</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Projekt importieren</h2>
+                <button class="modal-close" id="importModalClose">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="import-methods">
+                    <div class="import-method">
+                        <h3>Datei hochladen</h3>
+                        <p>Lade eine .sb3 Datei von deinem Computer hoch</p>
+                        <input type="file" id="importFileInput" accept=".sb3,.json" style="display: none;">
+                        <button class="btn btn-primary" id="importFileBtn">
+                            <i class="fas fa-upload"></i> Datei auswählen
+                        </button>
+                    </div>
+                    <div class="import-method">
+                        <h3>Drag & Drop</h3>
+                        <p>Ziehe eine .sb3 Datei hierher</p>
+                        <div class="drop-zone" id="importDropZone">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>Datei hier ablegen</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="import-preview" id="importPreview" style="display: none;">
+                    <h3>Vorschau</h3>
+                    <p><strong>Projektname:</strong> <span id="importProjectName"></span></p>
+                    <p><strong>Sprites:</strong> <span id="importSpriteCount"></span></p>
+                    <p><strong>Szenen:</strong> <span id="importSceneCount"></span></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="importModalCancel">Abbrechen</button>
+                <button class="btn btn-primary" id="importModalSubmit" disabled>Importieren</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">Lädt...</div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="context-menu" id="contextMenu">
+        <div class="context-menu-item" data-action="newFile">
+            <i class="fas fa-file"></i> Neue Datei
+        </div>
+        <div class="context-menu-item" data-action="newFolder">
+            <i class="fas fa-folder"></i> Neuer Ordner
+        </div>
+        <div class="context-menu-item" data-action="rename">
+            <i class="fas fa-edit"></i> Umbenennen
+        </div>
+        <div class="context-menu-item" data-action="duplicate">
+            <i class="fas fa-copy"></i> Duplizieren
+        </div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item" data-action="cut">
+            <i class="fas fa-cut"></i> Ausschneiden
+        </div>
+        <div class="context-menu-item" data-action="copy">
+            <i class="fas fa-copy"></i> Kopieren
+        </div>
+        <div class="context-menu-item" data-action="paste">
+            <i class="fas fa-paste"></i> Einfügen
+        </div>
+        <div class="context-menu-separator"></div>
+        <div class="context-menu-item danger" data-action="delete">
+            <i class="fas fa-trash"></i> Löschen
+        </div>
+    </div>
+
+    <!-- ============================================
+         SCRIPTS
+         ============================================ -->
+    
+    <!-- Core Application -->
+    <script src="app/main.js"></script>
+    
+    <!-- Components -->
+    <script src="components/project-explorer.js"></script>
+    <script src="components/editor.js"></script>
+    <script src="components/preview.js"></script>
+    <script src="components/statusbar.js"></script>
+    <script src="components/modals.js"></script>
+    <script src="components/notifications.js"></script>
+    <script src="components/context-menu.js"></script>
+    
+    <!-- Vibe Coding Language -->
+    <script src="parser/lexer.js"></script>
+    <script src="parser/parser.js"></script>
+    <script src="parser/ast.js"></script>
+    
+    <!-- Compiler -->
+    <script src="compiler/compiler.js"></script>
+    <script src="compiler/scratch-generator.js"></script>
+    <script src="compiler/sb3-export.js"></script>
+    
+    <!-- Runtime -->
+    <script src="runtime/runtime.js"></script>
+    <script src="runtime/virtual-machine.js"></script>
+    
+    <!-- Game Systems -->
+    <script src="game/sprite.js"></script>
+    <script src="game/scene.js"></script>
+    <script src="game/animation.js"></script>
+    <script src="game/collision.js"></script>
+    
+    <!-- Debugger -->
+    <script src="debugger/debugger.js"></script>
+    
+    <!-- Auth & Database -->
+    <script src="auth/auth.js"></script>
+    <script src="database/database.js"></script>
+    
+    <!-- History -->
+    <script src="history/history.js"></script>
+    
+    <!-- Settings -->
+    <script src="settings/settings.js"></script>
+    
+    <!-- Utils -->
+    <script src="utils/file.js"></script>
+    <script src="utils/uuid.js"></script>
+    <script src="utils/helpers.js"></script>
+    
+    <!-- CodeMirror Configuration -->
+    <script src="editor/codemirror-config.js"></script>
+    
+    <!-- Theme -->
+    <script src="styles/theme.js"></script>
+</body>
+</html>
