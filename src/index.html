@@ -5,30 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Scratch Vibe Coding IDE - Entwickle Scratch-Projekte durch Code">
     <title>Scratch Vibe Coding IDE</title>
+    <base href="./">
     
     <!-- Stylesheets -->
-    <link rel="stylesheet" href="styles/reset.css">
-    <link rel="stylesheet" href="styles/variables.css">
-    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/reset.min.css">
+    <link rel="stylesheet" href="styles/variables.min.css">
+    <link rel="stylesheet" href="styles/main.min.css">
     
-    <!-- CodeMirror for Code Editor -->
-    <link rel="stylesheet" href="lib/codemirror/codemirror.css">
-    <link rel="stylesheet" href="lib/codemirror/theme/dracula.css">
-    <link rel="stylesheet" href="lib/codemirror/addon/fold/foldgutter.css">
-    <link rel="stylesheet" href="lib/codemirror/addon/dialog/dialog.css">
-    <link rel="stylesheet" href="lib/codemirror/addon/search/matchesonscrollbar.css">
+    <!-- CodeMirror for Code Editor (from CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.min.css">
     
     <!-- Custom CodeMirror Theme -->
-    <link rel="stylesheet" href="styles/codemirror-theme.css">
+    <link rel="stylesheet" href="styles/codemirror-theme.min.css">
     
     <!-- Font Awesome for Icons (loaded from CDN) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.min.css">
     
     <!-- JSZip for .sb3 file creation -->
-    <script src="lib/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
     <!-- Local Storage Polyfill -->
-    <script src="lib/localforage.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/localforage/1.10.0/localforage.min.js"></script>
 </head>
 <body>
     <div id="app">

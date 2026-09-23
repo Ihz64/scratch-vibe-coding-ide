@@ -198,7 +198,7 @@ class ScratchVibeIDE {
             {
                 name: 'Projekt öffnen',
                 category: 'Projekt',
-                action: () => Modals.openImport(),
+                action: () => { if (AppState.isAuthenticated) Modals.openImport(); },
                 shortcut: 'Ctrl+O'
             },
             {

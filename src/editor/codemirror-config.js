@@ -4,7 +4,8 @@
  */
 
 // Custom Vibe Coding language mode for CodeMirror
-CodeMirror.defineMode('vibe', function(config, parserConfig) {
+// CodeMirror from CDN - remove local dependency
+// CodeMirror.defineMode('vibe', function(config, parserConfig) {
     const vibeOverlays = {};
     const vibeMode = CodeMirror.getMode(config, parserConfig.backdrop || 'text/plain');
 
